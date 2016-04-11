@@ -22,7 +22,7 @@ namespace AirlineEntities
                 return String.Format("Economy |{0,13:C}", TicketPrice);
         }
     }
-    class Passenger
+    public class Passenger
     {
         enum SexForPassenger { Male, Female }
         private string _passengerFirstname;

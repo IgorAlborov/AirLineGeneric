@@ -47,7 +47,7 @@ namespace AirlineEntities
         StatusForFlight FlightStatus;
         public decimal FlightPriceBussiness;
         public decimal FlightPriceEconomy;
-        Passenger[] PassengersList;
+        public Passenger[] PassengersList;
         public byte FlightFreePlace {
             get {
                 byte i = 0;
