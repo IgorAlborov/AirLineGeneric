@@ -1,33 +1,6 @@
-﻿[24.03.2016 19:01:28] Dmytro Obolonyk: 
-public Passenger(string passengerFirstname, stringpassengerLastname,string passengerNationality, 
-string passengerPasspower, DateTime passengerBirthday,
-int passengerSex, int passengerTicket, decimal priceBusiness, decimal priceEconomy)
+﻿1. Удаление рейса
+2. Редактирование рейса
+3. Добавления рейса
 
-метод принимает слишком много параметров, если идет больше 3-х входных параметров 
-то стоит задуматся о  передаче класса либо структуры. 
-Учитывая, что это конструктор, а свойства публичные, 
-то, тому кто создает класс можно инициализировать свойства в 
-фигурных скобках new MyClass(){Property = value}
-
-[24.03.2016 19:03:41] Dmytro Obolonyk:         public void ArrangeList(Flight[] FlightList)
-        {
-            throw new NotImplementedException();
-        }
-
-вот такого тоже не должно быть, класс должен реализовывать все методы интерфейса, 
-если метод не нужен в классе значит интерфейс надо разбивать на два (сегрегация интерфейсов) 
-один из принципов SOLID, об этом мы будем говорить в конце
-
-[24.03.2016 19:05:17] Dmytro Obolonyk: Units
-Лучше использовать слово Models, Entities
-
-[24.03.2016 19:09:20] Dmytro Obolonyk:   foreach (Flight item in FlightList) {
-                        if (item != null && (item.GetFlightStatus() == "CheckIn" || item.GetFlightStatus() == "Delayed")) {
-                            if (item.FlightFreePlace > 0) {
-                                if (tempFlightTicket >= item.FlightPriceEconomy) {
-                                    if (!isFind) {
-
-такой код становится очень неудобным, надо избегать дополнительных вложенностей, можно это делать следующим образом
-
-if(isFind)
-continue/return/break
+10. Перевод массива пассажиров в коллекцию
+11. Правка методов пассажиров
