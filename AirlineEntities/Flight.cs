@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AirlineEntities
 {
-    public class Flight
+    public class Flight:IComparable<Flight>
     {
         //констанкта кол-ва пассажиров в самолете
         public static readonly int FlightCapasity;
@@ -137,6 +137,9 @@ namespace AirlineEntities
             return this.FlightStatus.ToString();
         }
 
+        public int CompareTo(Flight other) {
+            return FlightNumber == other.FlightNumber ? 0 : (FlightNumber > other.FlightNumber ? 1 : -1);
+        }
     }
 }
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AirlineGeneric.Manager
 {
-    class FlightManage:IManager,IArrangeList
+    class FlightManage:IManager
     {
         #region Print Flights table
         public void PrintList(List<Flight> FlightList, int enterFlightNumber = 0) {
@@ -25,22 +25,7 @@ namespace AirlineGeneric.Manager
         }
         #endregion
 
-        #region Sort flights table
-        public void ArrangeList(List<Flight> FlightList) {
-            Flight temp = new Flight();
-            for (int i = 0; i < FlightList.Count; i++) {
-                for (int j = 0; j < FlightList.Count - 1; j++) {
-                    if (FlightList[j] == null && FlightList[j + 1] != null) {
-                        temp = FlightList[j];
-                        FlightList[j] = FlightList[j + 1];
-                        FlightList[j + 1] = temp;
-                    }
-                }
-            }
-
-        }
-        #endregion
-
+        
         #region Add flight
         public bool AddToList(List<Flight> FlightList) {
             int FreeCell = -1;
@@ -210,7 +195,7 @@ namespace AirlineGeneric.Manager
                     }
                 }
             } while (isCorrect);
-            this.ArrangeList(FlightList);
+            FlightList.Sort();
             return isDelete;
         }
         #endregion

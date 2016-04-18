@@ -16,7 +16,7 @@ namespace AirlineGeneric
         List<Flight> FlightList;
         IManager FlightsManager = new FlightManage();
         IManager PassengerManager = new PassengerManage();
-        IArrangeList ListManager = new FlightManage();
+        //IArrangeList ListManager = new FlightManage();
 
         const int ClearLineConsole = 37;
 
@@ -29,7 +29,7 @@ namespace AirlineGeneric
                 FlightList.Add(new Flight("sample"));
                 Thread.Sleep(100);
             }
-            ListManager.ArrangeList(FlightList);
+            FlightList.Sort();
 #endif
             #endregion
         }
