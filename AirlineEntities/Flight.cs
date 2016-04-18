@@ -138,6 +138,8 @@ namespace AirlineEntities
         }
 
         public int CompareTo(Flight other) {
+            if (FlightNumber == null)
+                return -1;
             return FlightNumber == other.FlightNumber ? 0 : (FlightNumber > other.FlightNumber ? 1 : -1);
         }
     }

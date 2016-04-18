@@ -8,10 +8,12 @@ using AirlineGeneric.Manager;
 
 namespace AirlineGeneric.Search
 {
-    class SearchManage : ISearchManager {
+    class SearchManage : ISearchManager
+    {
 
         #region Search passengers on flight number
-        public void SearchFlightNumber(List<Flight> FlightList) {
+        public void SearchFlightNumber(List<Flight> FlightList)
+        {
             IManager FlightsManager = new FlightManage();
             IManager PassengerManager = new PassengerManage();
             bool isEnter = true, isFind = false;
@@ -80,34 +82,33 @@ namespace AirlineGeneric.Search
         #endregion
 
         #region Search flight lower economy ticket
-        public void SearchFlightTicket(List<Flight> FlightList) {
+        public void SearchFlightTicket(List<Flight> FlightList)
+        {
             int tempFlightTicket;
             Console.WriteLine("Search only for flights in condition 'CheckIn' or 'Delayed'");
-            bool isEnter = true, isFind = false;
+            bool isEnter = true;
             do {
                 CleanerManager.CheckBorder();
+                if(FlightList.FindIndex(x=> (x.GetFlightStatus() == "CheckIn" || x.GetFlightStatus() == "Delayed")) == -1) {
+                    Console.WriteLine("No matching flights. Press any key.");
+                    Console.ReadKey();
+                    break;
+                }
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write("Enter the maximum price per economy ticket: ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 bool isCorrectValue = int.TryParse(Console.ReadLine(), out tempFlightTicket);
                 if (isCorrectValue) {
-                    foreach (Flight item in FlightList) {
-                        if (item != null && (item.GetFlightStatus() == "CheckIn" || item.GetFlightStatus() == "Delayed")) {
-                            if (item.FlightFreePlace > 0) {
-                                if (tempFlightTicket >= item.FlightPriceEconomy) {
-                                    if (!isFind) {
-                                        Console.WriteLine("---------------------------------------------------------------------------------------");
-                                        Console.WriteLine("|Direction|    Date/Time   |Number|     City      |Terminal/Gate|  Status  |Free places|");
-                                        Console.WriteLine("|---------|----------------|------|---------------|-------------|----------|-----------|");
-                                    }
-                                    Console.WriteLine($"=== Ticket price economy: {item.FlightPriceEconomy,13:C}");
-                                    Console.WriteLine(item.ToString());
-                                    isFind = true;
-                                }
-                            }
+                    List<Flight> tempFlights = FlightList.FindAll(x => (x.GetFlightStatus() == "CheckIn" ||
+                            x.GetFlightStatus() == "Delayed") && (tempFlightTicket >= x.FlightPriceEconomy));
+                    if (tempFlights.Count > 0) {
+                        Console.WriteLine("---------------------------------------------------------------------------------------");
+                        Console.WriteLine("|Direction|    Date/Time   |Number|     City      |Terminal/Gate|  Status  |Free places|");
+                        Console.WriteLine("|---------|----------------|------|---------------|-------------|----------|-----------|");
+                        foreach (Flight item in tempFlights) {
+                            Console.WriteLine($"=== Ticket price economy: {item.FlightPriceEconomy,13:C}");
+                            Console.WriteLine(item.ToString());
                         }
-                    }
-                    if (isFind) {
                         Console.WriteLine("----------------------------------------------------------------------------------------");
                         isEnter = false;
                     } else {
@@ -121,7 +122,8 @@ namespace AirlineGeneric.Search
         #endregion
 
         #region Search passenger by name or surname
-        public void SearchPassengerName(List<Flight> FlightList) {
+        public void SearchPassengerName(List<Flight> FlightList)
+        {
             bool isEnter = true, isFind = false;
             string insertPassengerPartName;
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -170,7 +172,8 @@ namespace AirlineGeneric.Search
         #endregion
 
         #region Search passenger's passport number
-        public void SearchPassengerPasspower(List<Flight> FlightList) {
+        public void SearchPassengerPasspower(List<Flight> FlightList)
+        {
             bool isEnter = true, isFind = false;
             string insertPassengerPartPassport;
             Console.ForegroundColor = ConsoleColor.Yellow;

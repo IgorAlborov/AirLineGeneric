@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace AirlineGeneric.Manager
 {
-    class FlightManage:IManager
+    class FlightManage : IManager
     {
         #region Print Flights table
-        public void PrintList(List<Flight> FlightList, int enterFlightNumber = 0) {
+        public void PrintList(List<Flight> FlightList, int enterFlightNumber = 0)
+        {
             Console.WriteLine("---------------------------------------------------------------------------------------");
             Console.WriteLine("|Direction|    Date/Time   |Number|     City      |Terminal/Gate|  Status  |Free places|");
             Console.WriteLine("|---------|----------------|------|---------------|-------------|----------|-----------|");
@@ -25,126 +26,119 @@ namespace AirlineGeneric.Manager
         }
         #endregion
 
-        
         #region Add flight
-        public bool AddToList(List<Flight> FlightList) {
-            int FreeCell = -1;
-            for (int i = 0; i < FlightList.Count; i++) {
-                if (FlightList[i] == null) {
-                    FreeCell = i;
-                    break;
-                }
-            }
-            if (FreeCell >= 0) {
-                byte insertFlightDirection = 0, insertFlightStatus = 0;
-                DateTime DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(1), insertFlightDate;
-                int insertFlightNumber, insertFlightGate, insertFlightPriceBusiness, insertFlightPriceEconomy;
-                string insertFlightCity;
-                char insertFlightTerminal;
+        public bool AddToList(List<Flight> FlightList)
+        {
 
+            byte insertFlightDirection = 0, insertFlightStatus = 0;
+            DateTime DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(1), insertFlightDate;
+            int insertFlightNumber, insertFlightGate, insertFlightPriceBusiness, insertFlightPriceEconomy;
+            string insertFlightCity;
+            char insertFlightTerminal;
+
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine("Select direction flight (A)rrival, (D)eparture");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            bool isCorrect = true;
+            do {
+                switch (Console.ReadKey().KeyChar) {
+                    case 'a':
+                    case 'A':
+                        insertFlightDirection = 0;
+                        isCorrect = false;
+                        break;
+                    case 'd':
+                    case 'D':
+                        insertFlightDirection = 1;
+                        isCorrect = false;
+                        break;
+                    default:
+                        Console.Write("Press 'A' or 'D'");
+                        break;
+                }
+            } while (isCorrect);
+            Console.WriteLine();
+
+            isCorrect = true;
+            do {
+                CleanerManager.CheckBorder();
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine("Select direction flight (A)rrival, (D)eparture");
+                Console.WriteLine("Enter date (format YYYY-MM-DD hh:mm): ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                bool isCorrect = true;
-                do {
-                    switch (Console.ReadKey().KeyChar) {
-                        case 'a':
-                        case 'A':
-                            insertFlightDirection = 0;
-                            isCorrect = false;
-                            break;
-                        case 'd':
-                        case 'D':
-                            insertFlightDirection = 1;
-                            isCorrect = false;
-                            break;
-                        default:
-                            Console.Write("Press 'A' or 'D'");
-                            break;
-                    }
-                } while (isCorrect);
-                Console.WriteLine();
-
-                isCorrect = true;
-                do {
-                    CleanerManager.CheckBorder();
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine("Enter date (format YYYY-MM-DD hh:mm): ");
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    bool isDate = DateTime.TryParse(Console.ReadLine(), out insertFlightDate);
-                    if (isDate && insertFlightDate > DateStart && insertFlightDate < DateEnd) {
-                        isCorrect = false;
-                    } else {
-                        Console.WriteLine("Incorrect date(less than this or more than one year) or format. Please repeat");
-                    }
-                } while (isCorrect);
-
-                isCorrect = true;
-                do {
-                    CleanerManager.CheckBorder();
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine("Enter Number flight [100..999]: ");
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    bool isDate = int.TryParse(Console.ReadLine(), out insertFlightNumber);
-                    if (isDate && insertFlightNumber > 99 && insertFlightNumber < 1000) {
-                        isCorrect = false;
-                        foreach (Flight item in FlightList) {
-                            if (item != null && item.FlightNumber == insertFlightNumber) {
-                                Console.WriteLine("A flight number already exists");
-                                isCorrect = true;
-                            }
-                        }
-
-                    } else {
-                        Console.WriteLine("-Incorrect flight number. Please repeat");
-                    }
-                } while (isCorrect);
-
-                isCorrect = true;
-                do {
-                    CleanerManager.CheckBorder();
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.Write("Enter City: ");
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    insertFlightCity = Console.ReadLine();
-                    if (String.IsNullOrWhiteSpace(insertFlightCity))
-                        Console.WriteLine("Strange empty city.Please repeat");
-                    else
-                        isCorrect = false;
-                } while (isCorrect);
-
-                insertFlightTerminal = EnterTerminal();
-                Console.WriteLine();
-                insertFlightGate = EnterGate();
-
-                insertFlightStatus = EnterStatus();
-                Console.WriteLine();
-
-                insertFlightPriceBusiness = EnterPriceTicket("Business");
-                Console.WriteLine();
-
-                insertFlightPriceEconomy = EnterPriceTicket("Economy");
-                Console.WriteLine();
-
-                if (insertFlightPriceEconomy > insertFlightPriceBusiness) {
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine("WARNING!!! Price Economy large Price business!!!");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Thread.Sleep(300);
+                bool isDate = DateTime.TryParse(Console.ReadLine(), out insertFlightDate);
+                if (isDate && insertFlightDate > DateStart && insertFlightDate < DateEnd) {
+                    isCorrect = false;
+                } else {
+                    Console.WriteLine("Incorrect date(less than this or more than one year) or format. Please repeat");
                 }
-                FlightList[FreeCell] = new Flight(insertFlightDirection, insertFlightDate, insertFlightNumber,
-                    insertFlightCity, insertFlightTerminal, insertFlightGate, insertFlightStatus,
-                    insertFlightPriceBusiness, insertFlightPriceEconomy);
-                return true;
-            } else {
-                Console.WriteLine("Your flight table is filled. Operation canceled.");
-                return false;
+            } while (isCorrect);
+
+            isCorrect = true;
+            do {
+                CleanerManager.CheckBorder();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("Enter Number flight [100..999]: ");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                bool isDate = int.TryParse(Console.ReadLine(), out insertFlightNumber);
+                if (isDate && insertFlightNumber > 99 && insertFlightNumber < 1000) {
+                    isCorrect = false;
+                    foreach (Flight item in FlightList) {
+                        if (item != null && item.FlightNumber == insertFlightNumber) {
+                            Console.WriteLine("A flight number already exists");
+                            isCorrect = true;
+                        }
+                    }
+
+                } else {
+                    Console.WriteLine("-Incorrect flight number. Please repeat");
+                }
+            } while (isCorrect);
+
+            isCorrect = true;
+            do {
+                CleanerManager.CheckBorder();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.Write("Enter City: ");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                insertFlightCity = Console.ReadLine();
+                if (String.IsNullOrWhiteSpace(insertFlightCity))
+                    Console.WriteLine("Strange empty city.Please repeat");
+                else
+                    isCorrect = false;
+            } while (isCorrect);
+
+            insertFlightTerminal = EnterTerminal();
+            Console.WriteLine();
+            insertFlightGate = EnterGate();
+
+            insertFlightStatus = EnterStatus();
+            Console.WriteLine();
+
+            insertFlightPriceBusiness = EnterPriceTicket("Business");
+            Console.WriteLine();
+
+            insertFlightPriceEconomy = EnterPriceTicket("Economy");
+            Console.WriteLine();
+
+            if (insertFlightPriceEconomy > insertFlightPriceBusiness) {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.WriteLine("WARNING!!! Price Economy large Price business!!!");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Thread.Sleep(300);
             }
+
+            FlightList.Add(new Flight(insertFlightDirection, insertFlightDate, insertFlightNumber,
+                insertFlightCity, insertFlightTerminal, insertFlightGate, insertFlightStatus,
+                insertFlightPriceBusiness, insertFlightPriceEconomy));
+
+            return true;
+
         }
         #endregion
 
         #region Delete flight
-        public bool DeleteFromList(List<Flight> FlightList, int enterFlightNumber = -1) {
+        public bool DeleteFromList(List<Flight> FlightList, int enterFlightNumber = -1)
+        {
             bool isDelete = false;
             bool isCorrect = true;
             int insertFlightNumber;
@@ -155,23 +149,22 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 bool isDate = int.TryParse(Console.ReadLine(), out insertFlightNumber);
                 if (isDate) {
-                    for (int i = 0; i < FlightList.Count; i++) {
-                        if (FlightList[i] != null && FlightList[i].FlightNumber == insertFlightNumber) {
-                            Console.WriteLine("We are sure that you want to delete the entry?(y/N)");
-                            switch (Console.ReadKey().KeyChar) {
-                                case 'y':
-                                case 'Y':
-                                    FlightList[i] = null;
-                                    isDelete = true;
-                                    isCorrect = false;
-                                    break;
-                                default:
-                                    isCorrect = false;
-                                    break;
-                            }
+                    int findFlight = FlightList.FindIndex(x => x.FlightNumber == insertFlightNumber);
+                    if (findFlight != -1) {
+                        Console.WriteLine("We are sure that you want to delete the entry?(y/N)");
+                        switch (Console.ReadKey().KeyChar) {
+                            case 'y':
+                            case 'Y':
+                                FlightList.RemoveAt(findFlight);
+                                isDelete = true;
+                                isCorrect = false;
+                                break;
+                            default:
+                                isCorrect = false;
+                                break;
+                                //        }
                         }
-                    }
-                    if (!isDelete && isCorrect) {
+                    } else {
                         Console.WriteLine("Flight number not found. Re-enter (y/N)");
                         switch (Console.ReadKey().KeyChar) {
                             case 'y':
@@ -195,14 +188,18 @@ namespace AirlineGeneric.Manager
                     }
                 }
             } while (isCorrect);
-            FlightList.Sort();
+            if (isDelete) {
+                FlightList.TrimExcess();
+                FlightList.Sort();
+            }
             return isDelete;
         }
         #endregion
 
         #region Edit flight
 
-        public bool EditList(List<Flight> FlightList, int enterFlightNumber = -1) {
+        public bool EditList(List<Flight> FlightList, int enterFlightNumber = -1)
+        {
             bool isEdit = false, isCorrect = true, isDate = false;
             int insertFlightNumber;
             do {
@@ -217,34 +214,35 @@ namespace AirlineGeneric.Manager
                     isDate = true;
                 }
                 if (isDate) {
-                    for (int i = 0; i < FlightList.Count; i++) {
-                        if (FlightList[i] != null && FlightList[i].FlightNumber == insertFlightNumber) {
-                            Console.WriteLine("What are we going to modify?(T)erminal,(G)ate,(S)tatus,(P)rice Business/Economy or other for Quit");
+
+                    int findFlight = FlightList.FindIndex(x => x.FlightNumber == insertFlightNumber);
+                    if (findFlight != -1) {
+                        Console.WriteLine("What are we going to modify?(T)erminal,(G)ate,(S)tatus,(P)rice Business/Economy or other for Quit");
                             switch (Console.ReadKey().KeyChar) {
                                 case 't':
                                 case 'T':
-                                    FlightList[i].FlightTerminal = EnterTerminal();
+                                    FlightList[findFlight].FlightTerminal = EnterTerminal();
                                     isEdit = true;
                                     isCorrect = false;
                                     break;
                                 case 'g':
                                 case 'G':
-                                    FlightList[i].FlightGate = (byte)EnterGate();
+                                    FlightList[findFlight].FlightGate = (byte)EnterGate();
                                     isEdit = true;
                                     isCorrect = false;
                                     break;
                                 case 's':
                                 case 'S':
-                                    FlightList[i].ChangeStatus(EnterStatus());
+                                    FlightList[findFlight].ChangeStatus(EnterStatus());
                                     isEdit = true;
                                     isCorrect = false;
                                     break;
                                 case 'p':
                                 case 'P':
-                                    Console.WriteLine($"Current Business price ticket: {FlightList[i].FlightPriceBussiness:C}");
-                                    Console.WriteLine($"Current Economy price ticket: {FlightList[i].FlightPriceEconomy:C}");
-                                    FlightList[i].FlightPriceBussiness = (decimal)EnterPriceTicket("Business");
-                                    FlightList[i].FlightPriceEconomy = (decimal)EnterPriceTicket("Economy");
+                                    Console.WriteLine($"Current Business price ticket: {FlightList[findFlight].FlightPriceBussiness:C}");
+                                    Console.WriteLine($"Current Economy price ticket: {FlightList[findFlight].FlightPriceEconomy:C}");
+                                    FlightList[findFlight].FlightPriceBussiness = (decimal)EnterPriceTicket("Business");
+                                    FlightList[findFlight].FlightPriceEconomy = (decimal)EnterPriceTicket("Economy");
                                     isEdit = true;
                                     isCorrect = false;
                                     break;
@@ -254,9 +252,7 @@ namespace AirlineGeneric.Manager
                                     isCorrect = false;
                                     break;
                             }
-                        }
-                    }
-                    if (!isEdit) {
+                        }else {
                         Console.WriteLine("Flight number not found.");
                         isCorrect = false;
                     }
@@ -279,8 +275,8 @@ namespace AirlineGeneric.Manager
         #endregion
 
 
-
-        static char EnterTerminal() {
+        static char EnterTerminal()
+        {
             bool isCorrect = true;
             char insertFlightTerminal;
             //string tempTerminals = "ABCDEFG";
@@ -301,7 +297,8 @@ namespace AirlineGeneric.Manager
 
         }
 
-        static int EnterGate() {
+        static int EnterGate()
+        {
             bool isCorrect = true;
             int insertFlightGate;
             do {
@@ -319,7 +316,8 @@ namespace AirlineGeneric.Manager
             return insertFlightGate;
         }
 
-        static byte EnterStatus() {
+        static byte EnterStatus()
+        {
             byte insertFlightStatus = 100;
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(@"Choise flight status (C)heckin, (G)ate closed, (A)rrived, 
@@ -382,7 +380,8 @@ namespace AirlineGeneric.Manager
             return insertFlightStatus;
         }
 
-        static int EnterPriceTicket(string ClassTicket) {
+        static int EnterPriceTicket(string ClassTicket)
+        {
             bool isCorrect = true;
             int insertFlightPrice;
             do {
