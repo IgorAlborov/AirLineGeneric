@@ -387,9 +387,6 @@ namespace AirlineGeneric.Manager
             return EnterFlightNumber;
         }
 
-
-        public void ArrangeList(Flight[] FlightList) {
-            throw new NotImplementedException();
-        }
+                
     }
 }

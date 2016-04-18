@@ -11,7 +11,6 @@ namespace AirlineGeneric.Manager
     interface IManager
     {
         void PrintList(Flight[] FlightList, int enterFlightNumber = -1);
-        void ArrangeList(Flight[] FlightList);
         bool AddToList(Flight[] FlightList);
         bool DeleteFromList(Flight[] FlightList, int enterFlightNumber = -1);
         bool EditList(Flight[] FlightList, int enterFlightNumber = -1);

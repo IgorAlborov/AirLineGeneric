@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AirlineGeneric.Manager
 {
-    class FlightManage:IManager
+    class FlightManage:IManager,IArrangeList
     {
         #region Print Flights table
         public void PrintList(Flight[] FlightList, int enterFlightNumber = 0) {

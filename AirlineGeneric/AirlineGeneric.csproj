@@ -46,6 +46,7 @@
     <Compile Include="Airline.cs" />
     <Compile Include="Manager\CleanerManager.cs" />
     <Compile Include="Manager\FlightManage.cs" />
+    <Compile Include="Manager\IArrangeList.cs" />
     <Compile Include="Manager\IManager.cs" />
     <Compile Include="Manager\PassengerManage.cs" />
     <Compile Include="Program.cs" />
