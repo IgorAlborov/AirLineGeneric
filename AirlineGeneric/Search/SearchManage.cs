@@ -11,7 +11,7 @@ namespace AirlineGeneric.Search
     class SearchManage : ISearchManager {
 
         #region Search passengers on flight number
-        public void SearchFlightNumber(Flight[] FlightList) {
+        public void SearchFlightNumber(List<Flight> FlightList) {
             IManager FlightsManager = new FlightManage();
             IManager PassengerManager = new PassengerManage();
             bool isEnter = true, isFind = false;
@@ -80,7 +80,7 @@ namespace AirlineGeneric.Search
         #endregion
 
         #region Search flight lower economy ticket
-        public void SearchFlightTicket(Flight[] FlightList) {
+        public void SearchFlightTicket(List<Flight> FlightList) {
             int tempFlightTicket;
             Console.WriteLine("Search only for flights in condition 'CheckIn' or 'Delayed'");
             bool isEnter = true, isFind = false;
@@ -121,7 +121,7 @@ namespace AirlineGeneric.Search
         #endregion
 
         #region Search passenger by name or surname
-        public void SearchPassengerName(Flight[] FlightList) {
+        public void SearchPassengerName(List<Flight> FlightList) {
             bool isEnter = true, isFind = false;
             string insertPassengerPartName;
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -170,7 +170,7 @@ namespace AirlineGeneric.Search
         #endregion
 
         #region Search passenger's passport number
-        public void SearchPassengerPasspower(Flight[] FlightList) {
+        public void SearchPassengerPasspower(List<Flight> FlightList) {
             bool isEnter = true, isFind = false;
             string insertPassengerPartPassport;
             Console.ForegroundColor = ConsoleColor.Yellow;

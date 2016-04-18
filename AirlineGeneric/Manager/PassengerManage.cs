@@ -11,7 +11,7 @@ namespace AirlineGeneric.Manager
     class PassengerManage:IManager
     {
         #region Print passengers
-        public void PrintList(Flight[] FlightList, int enterFlightNumber = -1) {
+        public void PrintList(List<Flight> FlightList, int enterFlightNumber = -1) {
             int EnterFlightNumber = enterFlightNumber;
             if (enterFlightNumber == -1)
                 EnterFlightNumber = EnteredFlightNumber(FlightList);
@@ -34,18 +34,15 @@ namespace AirlineGeneric.Manager
         #endregion
 
         #region Add passenger
-        public bool AddToList(Flight[] FlightList) {
+        public bool AddToList(List<Flight> FlightList) {
             NewPassenger newPassenger = new NewPassenger();
-            //string insertPassengerFirstname, insertPassengerLastname,
-            //    insertPassengerNationality, insertPassengerPasspower;
-            //DateTime insertPassengerBirthday, DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(-120);
+            
             DateTime DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(-120);
             Console.WriteLine("The operation is allowed only for flights in condition 'CheckIn' or 'Delayed'");
             int EnterFlightNumber = EnteredFlightNumber(FlightList);
             if (EnterFlightNumber == -1)
                 return false;
-            //int insertPassengerSex = 0, insertPassengerTicket = 0;
-
+            
             if (FlightList[EnterFlightNumber].FlightFreePlace == 0) {
                 Console.WriteLine("On this flight there are no free places");
                 return false;
@@ -189,12 +186,8 @@ namespace AirlineGeneric.Manager
             } while (isCorrect);
             Console.WriteLine();
 
+            
 
-
-
-            //FlightList[EnterFlightNumber].PassengersList[freeCell] = new Passenger(insertPassengerFirstname, insertPassengerLastname,
-            //    insertPassengerNationality, insertPassengerPasspower, insertPassengerBirthday, insertPassengerSex, insertPassengerTicket,
-            //    FlightList[EnterFlightNumber].FlightPriceBussiness, FlightList[EnterFlightNumber].FlightPriceEconomy);
             newPassenger.priceBussiness = FlightList[EnterFlightNumber].FlightPriceBussiness;
             newPassenger.priceEconomy = FlightList[EnterFlightNumber].FlightPriceEconomy;
             FlightList[EnterFlightNumber].PassengersList[freeCell] = new Passenger(newPassenger);
@@ -203,7 +196,7 @@ namespace AirlineGeneric.Manager
         #endregion
 
         #region Delete passenger
-        public bool DeleteFromList(Flight[] FlightList, int enterFlightNumber = -1) {
+        public bool DeleteFromList(List<Flight> FlightList, int enterFlightNumber = -1) {
             Console.WriteLine("The operation is allowed only for flights in condition 'CheckIn' or 'Delayed'");
             int EnterFlightNumber = enterFlightNumber;
             if (enterFlightNumber == -1)
@@ -261,7 +254,7 @@ namespace AirlineGeneric.Manager
         #endregion
 
         #region Edit passenger (Lastname,firstName,Birthday)
-        public bool EditList(Flight[] FlightList, int enterFlightNumber = -1) {
+        public bool EditList(List<Flight> FlightList, int enterFlightNumber = -1) {
             Console.WriteLine("The operation is allowed only for flights in condition 'CheckIn' or 'Delayed'");
             int EnterFlightNumber = enterFlightNumber;
             if (enterFlightNumber == -1)
@@ -356,7 +349,7 @@ namespace AirlineGeneric.Manager
         }
         #endregion
 
-        static int EnteredFlightNumber(Flight[] FlightList) {
+        static int EnteredFlightNumber(List<Flight> FlightList) {
             bool isEnter = true, isFind = false;
             int EnterFlightNumber = 0, tempFlightNumber;
             do {

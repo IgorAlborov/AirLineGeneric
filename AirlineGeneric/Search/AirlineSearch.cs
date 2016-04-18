@@ -9,7 +9,7 @@ namespace AirlineGeneric.Search
 {
     class AirlineSearch
     {
-        public static void SearchMenu(Flight[] FlightList) {
+        public static void SearchMenu(List<Flight> FlightList) {
             ISearchManager SearchManager = new SearchManage();
             bool isEnter = true;
             do {

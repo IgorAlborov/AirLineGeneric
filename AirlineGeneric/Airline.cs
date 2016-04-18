@@ -13,7 +13,7 @@ namespace AirlineGeneric
 {
     class Airline
     {
-        Flight[] FlightList;
+        List<Flight> FlightList;
         IManager FlightsManager = new FlightManage();
         IManager PassengerManager = new PassengerManage();
         IArrangeList ListManager = new FlightManage();
@@ -21,15 +21,14 @@ namespace AirlineGeneric
         const int ClearLineConsole = 37;
 
         public Airline(byte flightsCount) {
-            FlightList = new Flight[flightsCount];
+            FlightList = new List<Flight>(flightsCount);
 
             #region insert sample value
 #if (SAMPLEVALUE)
-            FlightList[0] = new Flight("sample");
-            Thread.Sleep(100);
-            FlightList[1] = new Flight("sample");
-            Thread.Sleep(100);
-            FlightList[2] = new Flight("sample");
+            for (int i = 1; i <= flightsCount; i++) {
+                FlightList.Add(new Flight("sample"));
+                Thread.Sleep(100);
+            }
             ListManager.ArrangeList(FlightList);
 #endif
             #endregion

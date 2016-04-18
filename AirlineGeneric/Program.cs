@@ -16,8 +16,10 @@ namespace AirlineGeneric
             Thread.CurrentThread.CurrentCulture = ci;
             Thread.CurrentThread.CurrentUICulture = ci;
 
-            const byte FlightsCount = 10;
+            //start value flight
+            const byte FlightsCount = 5;
             Airline AlborovAirline = new Airline(FlightsCount);
+            
 
             #region Main menu
             bool isEnter = true;

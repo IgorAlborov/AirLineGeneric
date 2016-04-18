@@ -9,6 +9,6 @@ namespace AirlineGeneric.Manager
 {
     interface IArrangeList
     {
-        void ArrangeList(Flight[] FlightList);
+        void ArrangeList(List<Flight> FlightList);
     }
 }

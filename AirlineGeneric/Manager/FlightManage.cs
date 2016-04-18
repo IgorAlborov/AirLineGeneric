@@ -11,7 +11,7 @@ namespace AirlineGeneric.Manager
     class FlightManage:IManager,IArrangeList
     {
         #region Print Flights table
-        public void PrintList(Flight[] FlightList, int enterFlightNumber = 0) {
+        public void PrintList(List<Flight> FlightList, int enterFlightNumber = 0) {
             Console.WriteLine("---------------------------------------------------------------------------------------");
             Console.WriteLine("|Direction|    Date/Time   |Number|     City      |Terminal/Gate|  Status  |Free places|");
             Console.WriteLine("|---------|----------------|------|---------------|-------------|----------|-----------|");
@@ -26,10 +26,10 @@ namespace AirlineGeneric.Manager
         #endregion
 
         #region Sort flights table
-        public void ArrangeList(Flight[] FlightList) {
+        public void ArrangeList(List<Flight> FlightList) {
             Flight temp = new Flight();
-            for (int i = 0; i < FlightList.Length; i++) {
-                for (int j = 0; j < FlightList.Length - 1; j++) {
+            for (int i = 0; i < FlightList.Count; i++) {
+                for (int j = 0; j < FlightList.Count - 1; j++) {
                     if (FlightList[j] == null && FlightList[j + 1] != null) {
                         temp = FlightList[j];
                         FlightList[j] = FlightList[j + 1];
@@ -42,9 +42,9 @@ namespace AirlineGeneric.Manager
         #endregion
 
         #region Add flight
-        public bool AddToList(Flight[] FlightList) {
+        public bool AddToList(List<Flight> FlightList) {
             int FreeCell = -1;
-            for (int i = 0; i < FlightList.Length; i++) {
+            for (int i = 0; i < FlightList.Count; i++) {
                 if (FlightList[i] == null) {
                     FreeCell = i;
                     break;
@@ -159,7 +159,7 @@ namespace AirlineGeneric.Manager
         #endregion
 
         #region Delete flight
-        public bool DeleteFromList(Flight[] FlightList, int enterFlightNumber = -1) {
+        public bool DeleteFromList(List<Flight> FlightList, int enterFlightNumber = -1) {
             bool isDelete = false;
             bool isCorrect = true;
             int insertFlightNumber;
@@ -170,7 +170,7 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 bool isDate = int.TryParse(Console.ReadLine(), out insertFlightNumber);
                 if (isDate) {
-                    for (int i = 0; i < FlightList.Length; i++) {
+                    for (int i = 0; i < FlightList.Count; i++) {
                         if (FlightList[i] != null && FlightList[i].FlightNumber == insertFlightNumber) {
                             Console.WriteLine("We are sure that you want to delete the entry?(y/N)");
                             switch (Console.ReadKey().KeyChar) {
@@ -217,7 +217,7 @@ namespace AirlineGeneric.Manager
 
         #region Edit flight
 
-        public bool EditList(Flight[] FlightList, int enterFlightNumber = -1) {
+        public bool EditList(List<Flight> FlightList, int enterFlightNumber = -1) {
             bool isEdit = false, isCorrect = true, isDate = false;
             int insertFlightNumber;
             do {
@@ -232,7 +232,7 @@ namespace AirlineGeneric.Manager
                     isDate = true;
                 }
                 if (isDate) {
-                    for (int i = 0; i < FlightList.Length; i++) {
+                    for (int i = 0; i < FlightList.Count; i++) {
                         if (FlightList[i] != null && FlightList[i].FlightNumber == insertFlightNumber) {
                             Console.WriteLine("What are we going to modify?(T)erminal,(G)ate,(S)tatus,(P)rice Business/Economy or other for Quit");
                             switch (Console.ReadKey().KeyChar) {

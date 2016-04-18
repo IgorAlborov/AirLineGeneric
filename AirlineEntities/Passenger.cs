@@ -121,20 +121,7 @@ namespace AirlineEntities
 
         #endregion
 
-        //public Passenger(string passengerFirstname, string passengerLastname,
-        //        string passengerNationality, string passengerPasspower, DateTime passengerBirthday,
-        //        int passengerSex, int passengerTicket, decimal priceBusiness, decimal priceEconomy) {
-        //    PassengerFirstname = passengerFirstname;
-        //    PassengerLastname = passengerLastname;
-        //    PassengerNationality = passengerNationality;
-        //    PassengerPasspower = passengerPasspower;
-        //    PassengerBirthday = passengerBirthday;
-        //    PassengerSex = (SexForPassenger)passengerSex;
-        //    if (passengerTicket == 0)
-        //        PassengerTicket = new Ticket(ClassForTicket.Business, priceBusiness);
-        //    else
-        //        PassengerTicket = new Ticket(ClassForTicket.Economy, priceEconomy);
-        //}
+        
         public Passenger( NewPassenger passenger) {
             PassengerFirstname = passenger.insertPassengerFirstname;
             PassengerLastname = passenger.insertPassengerLastname;
