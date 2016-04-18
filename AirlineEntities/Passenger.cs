@@ -4,8 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
+
 namespace AirlineEntities
 {
+    public struct NewPassenger
+    {
+        public string insertPassengerFirstname, insertPassengerLastname,
+                        insertPassengerNationality, insertPassengerPasspower;
+        public DateTime insertPassengerBirthday;
+        public int insertPassengerSex, insertPassengerTicket;
+        public decimal priceBussiness, priceEconomy;
+    }
+
     enum ClassForTicket { Business, Economy }
     struct Ticket
     {
@@ -109,19 +121,31 @@ namespace AirlineEntities
 
         #endregion
 
-        public Passenger(string passengerFirstname, string passengerLastname,
-                string passengerNationality, string passengerPasspower, DateTime passengerBirthday,
-                int passengerSex, int passengerTicket, decimal priceBusiness, decimal priceEconomy) {
-            PassengerFirstname = passengerFirstname;
-            PassengerLastname = passengerLastname;
-            PassengerNationality = passengerNationality;
-            PassengerPasspower = passengerPasspower;
-            PassengerBirthday = passengerBirthday;
-            PassengerSex = (SexForPassenger)passengerSex;
-            if (passengerTicket == 0)
-                PassengerTicket = new Ticket(ClassForTicket.Business, priceBusiness);
+        //public Passenger(string passengerFirstname, string passengerLastname,
+        //        string passengerNationality, string passengerPasspower, DateTime passengerBirthday,
+        //        int passengerSex, int passengerTicket, decimal priceBusiness, decimal priceEconomy) {
+        //    PassengerFirstname = passengerFirstname;
+        //    PassengerLastname = passengerLastname;
+        //    PassengerNationality = passengerNationality;
+        //    PassengerPasspower = passengerPasspower;
+        //    PassengerBirthday = passengerBirthday;
+        //    PassengerSex = (SexForPassenger)passengerSex;
+        //    if (passengerTicket == 0)
+        //        PassengerTicket = new Ticket(ClassForTicket.Business, priceBusiness);
+        //    else
+        //        PassengerTicket = new Ticket(ClassForTicket.Economy, priceEconomy);
+        //}
+        public Passenger( NewPassenger passenger) {
+            PassengerFirstname = passenger.insertPassengerFirstname;
+            PassengerLastname = passenger.insertPassengerLastname;
+            PassengerNationality = passenger.insertPassengerNationality;
+            PassengerPasspower = passenger.insertPassengerPasspower;
+            PassengerBirthday = passenger.insertPassengerBirthday;
+            PassengerSex = (SexForPassenger)passenger.insertPassengerSex;
+            if (passenger.insertPassengerTicket == 0)
+                PassengerTicket = new Ticket(ClassForTicket.Business, passenger.priceBussiness);
             else
-                PassengerTicket = new Ticket(ClassForTicket.Economy, priceEconomy);
+                PassengerTicket = new Ticket(ClassForTicket.Economy, passenger.priceEconomy);
         }
 
 

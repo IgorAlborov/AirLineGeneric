@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace AirlineGeneric.Manager
 {
+    
     class PassengerManage:IManager
     {
         #region Print passengers
@@ -34,14 +35,16 @@ namespace AirlineGeneric.Manager
 
         #region Add passenger
         public bool AddToList(Flight[] FlightList) {
-            string insertPassengerFirstname, insertPassengerLastname,
-                insertPassengerNationality, insertPassengerPasspower;
-            DateTime insertPassengerBirthday, DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(-120);
+            NewPassenger newPassenger = new NewPassenger();
+            //string insertPassengerFirstname, insertPassengerLastname,
+            //    insertPassengerNationality, insertPassengerPasspower;
+            //DateTime insertPassengerBirthday, DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(-120);
+            DateTime DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(-120);
             Console.WriteLine("The operation is allowed only for flights in condition 'CheckIn' or 'Delayed'");
             int EnterFlightNumber = EnteredFlightNumber(FlightList);
             if (EnterFlightNumber == -1)
                 return false;
-            int insertPassengerSex = 0, insertPassengerTicket = 0;
+            //int insertPassengerSex = 0, insertPassengerTicket = 0;
 
             if (FlightList[EnterFlightNumber].FlightFreePlace == 0) {
                 Console.WriteLine("On this flight there are no free places");
@@ -71,8 +74,8 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write("Enter first name: ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                insertPassengerFirstname = Console.ReadLine();
-                if (String.IsNullOrWhiteSpace(insertPassengerFirstname))
+                newPassenger.insertPassengerFirstname = Console.ReadLine();
+                if (String.IsNullOrWhiteSpace(newPassenger.insertPassengerFirstname))
                     Console.WriteLine("Strange empty first name.Please repeat");
                 else
                     isCorrect = false;
@@ -84,8 +87,8 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write("Enter last name: ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                insertPassengerLastname = Console.ReadLine();
-                if (String.IsNullOrWhiteSpace(insertPassengerLastname))
+                newPassenger.insertPassengerLastname = Console.ReadLine();
+                if (String.IsNullOrWhiteSpace(newPassenger.insertPassengerLastname))
                     Console.WriteLine("Strange empty last name.Please repeat");
                 else
                     isCorrect = false;
@@ -97,8 +100,8 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write("Enter nationality: ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                insertPassengerNationality = Console.ReadLine();
-                if (String.IsNullOrWhiteSpace(insertPassengerNationality))
+                newPassenger.insertPassengerNationality = Console.ReadLine();
+                if (String.IsNullOrWhiteSpace(newPassenger.insertPassengerNationality))
                     Console.WriteLine("Strange empty nationality.Please repeat");
                 else
                     isCorrect = false;
@@ -110,13 +113,13 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write("Enter passpower: ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                insertPassengerPasspower = Console.ReadLine();
-                if (String.IsNullOrWhiteSpace(insertPassengerPasspower))
+                newPassenger.insertPassengerPasspower = Console.ReadLine();
+                if (String.IsNullOrWhiteSpace(newPassenger.insertPassengerPasspower))
                     Console.WriteLine("Strange empty passport.Please repeat");
                 else
                     isCorrect = false;
                 bool isPassport = true;
-                foreach (char item in insertPassengerPasspower) {
+                foreach (char item in newPassenger.insertPassengerPasspower) {
                     if (!char.IsLetterOrDigit(item))
                         isPassport = false;
                 }
@@ -132,8 +135,8 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Enter birthday date passenger (format YYYY-MM-DD): ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                bool isDate = DateTime.TryParse(Console.ReadLine(), out insertPassengerBirthday);
-                if (isDate && insertPassengerBirthday < DateStart && insertPassengerBirthday > DateEnd) {
+                bool isDate = DateTime.TryParse(Console.ReadLine(), out newPassenger.insertPassengerBirthday);
+                if (isDate && newPassenger.insertPassengerBirthday < DateStart && newPassenger.insertPassengerBirthday > DateEnd) {
                     isCorrect = false;
                 } else {
                     Console.WriteLine("Incorrect date(not yet born or long dead) or format. Please repeat");
@@ -148,12 +151,12 @@ namespace AirlineGeneric.Manager
                 switch (Console.ReadKey().KeyChar) {
                     case 'm':
                     case 'M':
-                        insertPassengerSex = 0;
+                        newPassenger.insertPassengerSex = 0;
                         isCorrect = false;
                         break;
                     case 'f':
                     case 'F':
-                        insertPassengerSex = 1;
+                        newPassenger.insertPassengerSex = 1;
                         isCorrect = false;
                         break;
                     default:
@@ -171,12 +174,12 @@ namespace AirlineGeneric.Manager
                 switch (Console.ReadKey().KeyChar) {
                     case 'b':
                     case 'B':
-                        insertPassengerTicket = 0;
+                        newPassenger.insertPassengerTicket = 0;
                         isCorrect = false;
                         break;
                     case 'e':
                     case 'E':
-                        insertPassengerTicket = 1;
+                        newPassenger.insertPassengerTicket = 1;
                         isCorrect = false;
                         break;
                     default:
@@ -186,9 +189,15 @@ namespace AirlineGeneric.Manager
             } while (isCorrect);
             Console.WriteLine();
 
-            FlightList[EnterFlightNumber].PassengersList[freeCell] = new Passenger(insertPassengerFirstname, insertPassengerLastname,
-                insertPassengerNationality, insertPassengerPasspower, insertPassengerBirthday, insertPassengerSex, insertPassengerTicket,
-                FlightList[EnterFlightNumber].FlightPriceBussiness, FlightList[EnterFlightNumber].FlightPriceEconomy);
+
+
+
+            //FlightList[EnterFlightNumber].PassengersList[freeCell] = new Passenger(insertPassengerFirstname, insertPassengerLastname,
+            //    insertPassengerNationality, insertPassengerPasspower, insertPassengerBirthday, insertPassengerSex, insertPassengerTicket,
+            //    FlightList[EnterFlightNumber].FlightPriceBussiness, FlightList[EnterFlightNumber].FlightPriceEconomy);
+            newPassenger.priceBussiness = FlightList[EnterFlightNumber].FlightPriceBussiness;
+            newPassenger.priceEconomy = FlightList[EnterFlightNumber].FlightPriceEconomy;
+            FlightList[EnterFlightNumber].PassengersList[freeCell] = new Passenger(newPassenger);
             return true;
         }
         #endregion
