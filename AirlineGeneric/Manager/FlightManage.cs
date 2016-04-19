@@ -29,12 +29,11 @@ namespace AirlineGeneric.Manager
         #region Add flight
         public bool AddToList(List<Flight> FlightList)
         {
+            NewFlight newFlight = new NewFlight();
 
-            byte insertFlightDirection = 0, insertFlightStatus = 0;
-            DateTime DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(1), insertFlightDate;
-            int insertFlightNumber, insertFlightGate, insertFlightPriceBusiness, insertFlightPriceEconomy;
-            string insertFlightCity;
-            char insertFlightTerminal;
+            DateTime DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(1);
+            
+            
 
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Select direction flight (A)rrival, (D)eparture");
@@ -44,12 +43,12 @@ namespace AirlineGeneric.Manager
                 switch (Console.ReadKey().KeyChar) {
                     case 'a':
                     case 'A':
-                        insertFlightDirection = 0;
+                        newFlight.insertFlightDirection = 0;
                         isCorrect = false;
                         break;
                     case 'd':
                     case 'D':
-                        insertFlightDirection = 1;
+                        newFlight.insertFlightDirection = 1;
                         isCorrect = false;
                         break;
                     default:
@@ -65,8 +64,8 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Enter date (format YYYY-MM-DD hh:mm): ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                bool isDate = DateTime.TryParse(Console.ReadLine(), out insertFlightDate);
-                if (isDate && insertFlightDate > DateStart && insertFlightDate < DateEnd) {
+                bool isDate = DateTime.TryParse(Console.ReadLine(), out newFlight.insertFlightDate);
+                if (isDate && newFlight.insertFlightDate > DateStart && newFlight.insertFlightDate < DateEnd) {
                     isCorrect = false;
                 } else {
                     Console.WriteLine("Incorrect date(less than this or more than one year) or format. Please repeat");
@@ -79,11 +78,11 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("Enter Number flight [100..999]: ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                bool isDate = int.TryParse(Console.ReadLine(), out insertFlightNumber);
-                if (isDate && insertFlightNumber > 99 && insertFlightNumber < 1000) {
+                bool isDate = int.TryParse(Console.ReadLine(), out newFlight.insertFlightNumber);
+                if (isDate && newFlight.insertFlightNumber > 99 && newFlight.insertFlightNumber < 1000) {
                     isCorrect = false;
                     foreach (Flight item in FlightList) {
-                        if (item != null && item.FlightNumber == insertFlightNumber) {
+                        if (item != null && item.FlightNumber == newFlight.insertFlightNumber) {
                             Console.WriteLine("A flight number already exists");
                             isCorrect = true;
                         }
@@ -100,36 +99,34 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write("Enter City: ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                insertFlightCity = Console.ReadLine();
-                if (String.IsNullOrWhiteSpace(insertFlightCity))
+                newFlight.insertFlightCity = Console.ReadLine();
+                if (String.IsNullOrWhiteSpace(newFlight.insertFlightCity))
                     Console.WriteLine("Strange empty city.Please repeat");
                 else
                     isCorrect = false;
             } while (isCorrect);
 
-            insertFlightTerminal = EnterTerminal();
+            newFlight.insertFlightTerminal = EnterTerminal();
             Console.WriteLine();
-            insertFlightGate = EnterGate();
+            newFlight.insertFlightGate = EnterGate();
 
-            insertFlightStatus = EnterStatus();
-            Console.WriteLine();
-
-            insertFlightPriceBusiness = EnterPriceTicket("Business");
+            newFlight.insertFlightStatus = EnterStatus();
             Console.WriteLine();
 
-            insertFlightPriceEconomy = EnterPriceTicket("Economy");
+            newFlight.insertFlightPriceBusiness = EnterPriceTicket("Business");
             Console.WriteLine();
 
-            if (insertFlightPriceEconomy > insertFlightPriceBusiness) {
+            newFlight.insertFlightPriceEconomy = EnterPriceTicket("Economy");
+            Console.WriteLine();
+
+            if (newFlight.insertFlightPriceEconomy > newFlight.insertFlightPriceBusiness) {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("WARNING!!! Price Economy large Price business!!!");
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Thread.Sleep(300);
             }
 
-            FlightList.Add(new Flight(insertFlightDirection, insertFlightDate, insertFlightNumber,
-                insertFlightCity, insertFlightTerminal, insertFlightGate, insertFlightStatus,
-                insertFlightPriceBusiness, insertFlightPriceEconomy));
+            FlightList.Add(new Flight(newFlight));
 
             return true;
 

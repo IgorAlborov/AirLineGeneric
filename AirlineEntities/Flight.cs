@@ -8,7 +8,16 @@ using System.Threading.Tasks;
 
 namespace AirlineEntities
 {
-    public class Flight:IComparable<Flight>
+    public struct NewFlight
+    {
+        public byte insertFlightDirection, insertFlightStatus;
+        public DateTime insertFlightDate;
+        public int insertFlightNumber, insertFlightGate, insertFlightPriceBusiness, insertFlightPriceEconomy;
+        public string insertFlightCity;
+        public char insertFlightTerminal;
+    }
+
+    public class Flight : IComparable<Flight>
     {
         //констанкта кол-ва пассажиров в самолете
         public static readonly int FlightCapasity;
@@ -71,18 +80,19 @@ namespace AirlineEntities
                    FlightStatus, FlightFreePlace);
         }
 
-        public Flight(byte flightDirection, DateTime flightDate, int flightNumber, string flightCity,
-            char flightTerminal, int flightGate, byte flightStatus, int flightPriceBusiness,
-            int flightPriceEconomy) : this() {
-            FlightDirection = (DirectionForFlight)flightDirection;
-            FlightDate = flightDate;
-            FlightNumber = flightNumber;
-            FlightCity = flightCity;
-            FlightTerminal = flightTerminal;
-            FlightGate = (byte)flightGate;
-            FlightStatus = (StatusForFlight)flightStatus;
-            FlightPriceBussiness = (decimal)flightPriceBusiness;
-            FlightPriceEconomy = (decimal)flightPriceEconomy;
+        public Flight(NewFlight newFlight) : this() {
+            FlightDirection = (DirectionForFlight)newFlight.insertFlightDirection;
+            FlightStatus = (StatusForFlight)newFlight.insertFlightStatus;
+            if (newFlight.insertFlightDate < DateTime.Now)
+                FlightDate = DateTime.Now;
+            else
+                FlightDate = newFlight.insertFlightDate;
+            FlightGate = (byte)newFlight.insertFlightGate;
+            FlightPriceBussiness = (decimal)newFlight.insertFlightPriceBusiness;
+            FlightPriceEconomy = (decimal)newFlight.insertFlightPriceEconomy;
+            FlightNumber = newFlight.insertFlightNumber;
+            FlightCity = newFlight.insertFlightCity;
+            FlightTerminal = newFlight.insertFlightTerminal;
         }
 
         #region insert sample value
