@@ -34,7 +34,7 @@ namespace AirlineEntities
                 return String.Format("Economy |{0,13:C}", TicketPrice);
         }
     }
-    public class Passenger
+    public class Passenger : IComparable<Passenger>
     {
         enum SexForPassenger { Male, Female }
         private string _passengerFirstname;
@@ -74,6 +74,12 @@ namespace AirlineEntities
             return String.Format("|{0,-14}|{1,-16}|{2,-10}|{3,-8}|{4,7}|{5,-11}|{6,10}|", PassengerFirstname,
                    PassengerLastname, PassengerBirthday.ToString("dd-MM-yyyy"), PassengerPasspower, PassengerSex,
                    PassengerNationality, PassengerTicket.ToString());
+        }
+
+        public int CompareTo(Passenger other) {
+            if (other == null)
+                return -1;
+            return PassengerLastname.CompareTo(other.PassengerLastname);
         }
 
         #region insert sample value

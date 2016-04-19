@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace AirlineGeneric.Manager
 {
-    
-    class PassengerManage:IManager
+
+    class PassengerManage : IManager
     {
         #region Print passengers
         public void PrintList(List<Flight> FlightList, int enterFlightNumber = -1) {
@@ -36,35 +36,27 @@ namespace AirlineGeneric.Manager
         #region Add passenger
         public bool AddToList(List<Flight> FlightList) {
             NewPassenger newPassenger = new NewPassenger();
-            
+
             DateTime DateStart = DateTime.Now, DateEnd = DateTime.Now.AddYears(-120);
             Console.WriteLine("The operation is allowed only for flights in condition 'CheckIn' or 'Delayed'");
-            int EnterFlightNumber = EnteredFlightNumber(FlightList);
-            if (EnterFlightNumber == -1)
+            int IndexFlightNumber = EnteredFlightNumber(FlightList);
+            if (IndexFlightNumber == -1)
                 return false;
-            
-            if (FlightList[EnterFlightNumber].FlightFreePlace == 0) {
+
+            if (FlightList[IndexFlightNumber].FlightFreePlace == 0) {
                 Console.WriteLine("On this flight there are no free places");
                 return false;
             }
 
 
-            if (FlightList[EnterFlightNumber].GetFlightStatus() != "CheckIn" &&
-                FlightList[EnterFlightNumber].GetFlightStatus() != "Delayed") {
+            if (FlightList[IndexFlightNumber].GetFlightStatus() != "CheckIn" &&
+                FlightList[IndexFlightNumber].GetFlightStatus() != "Delayed") {
                 Console.WriteLine("Flight status does not allow additional passengers.");
                 return false;
             }
 
-            int freeCell = 0;
-            if (FlightList[EnterFlightNumber].PassengersList != null) {
-                for (int i = 0; i < FlightList[EnterFlightNumber].PassengersList.Length; i++) {
-                    if (FlightList[EnterFlightNumber].PassengersList[i] == null) {
-                        freeCell = i;
-                        break;
-                    }
-                }
-            }
-
+            int freeCell = FlightList[IndexFlightNumber].PassengersList.FindIndex(x => x == null);
+            
             bool isCorrect = true;
             do {
                 CleanerManager.CheckBorder();
@@ -186,11 +178,14 @@ namespace AirlineGeneric.Manager
             } while (isCorrect);
             Console.WriteLine();
 
-            
 
-            newPassenger.priceBussiness = FlightList[EnterFlightNumber].FlightPriceBussiness;
-            newPassenger.priceEconomy = FlightList[EnterFlightNumber].FlightPriceEconomy;
-            FlightList[EnterFlightNumber].PassengersList[freeCell] = new Passenger(newPassenger);
+
+            newPassenger.priceBussiness = FlightList[IndexFlightNumber].FlightPriceBussiness;
+            newPassenger.priceEconomy = FlightList[IndexFlightNumber].FlightPriceEconomy;
+            if (freeCell != -1)
+                FlightList[IndexFlightNumber].PassengersList[freeCell] = new Passenger(newPassenger);
+            else
+                FlightList[IndexFlightNumber].PassengersList.Add(new Passenger(newPassenger));
             return true;
         }
         #endregion
@@ -198,23 +193,22 @@ namespace AirlineGeneric.Manager
         #region Delete passenger
         public bool DeleteFromList(List<Flight> FlightList, int enterFlightNumber = -1) {
             Console.WriteLine("The operation is allowed only for flights in condition 'CheckIn' or 'Delayed'");
-            int EnterFlightNumber = enterFlightNumber;
+            int IndexFlightNumber = enterFlightNumber;
             if (enterFlightNumber == -1)
-                EnterFlightNumber = EnteredFlightNumber(FlightList);
+                IndexFlightNumber = EnteredFlightNumber(FlightList);
 
-            if (EnterFlightNumber == -1)
+            if (IndexFlightNumber == -1)
                 return false;
 
-            if (FlightList[EnterFlightNumber].GetFlightStatus() != "CheckIn" &&
-                FlightList[EnterFlightNumber].GetFlightStatus() != "Delayed") {
+            if (FlightList[IndexFlightNumber].GetFlightStatus() != "CheckIn" &&
+                FlightList[IndexFlightNumber].GetFlightStatus() != "Delayed") {
                 Console.WriteLine("Flight status does not allow passengers to remove");
                 return false;
             }
 
             if (enterFlightNumber == -1)
-                this.PrintList(FlightList, EnterFlightNumber);
-            int maxPassengerNumber = FlightList[EnterFlightNumber].PassengersList.Length - FlightList[EnterFlightNumber].FlightFreePlace;
-            if (maxPassengerNumber == 0) {
+                this.PrintList(FlightList, IndexFlightNumber);
+            if (FlightList[IndexFlightNumber].PassengersList.Count == 0) {
                 Console.WriteLine("On this flight no tickets sold");
                 return false;
             }
@@ -228,26 +222,16 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 bool isCorrectValue = int.TryParse(Console.ReadLine(), out tempFlightNumber);
                 if (isCorrectValue) {
-                    if (tempFlightNumber > 0 && tempFlightNumber <= maxPassengerNumber) {
+                    if (tempFlightNumber > 0 && tempFlightNumber <= (FlightList[IndexFlightNumber].PassengersList.Count+1)) {
                         tempFlightNumber--;
-                        FlightList[EnterFlightNumber].PassengersList[tempFlightNumber] = null;
+                        FlightList[IndexFlightNumber].PassengersList.RemoveAt(tempFlightNumber);
                         isEnter = false;
+                        FlightList[IndexFlightNumber].PassengersList.TrimExcess();
                     } else
                         Console.WriteLine("Number passenger out of range");
                 } else
                     Console.WriteLine("Number passenger is not digit");
             } while (isEnter);
-
-            Passenger temp;
-            for (int i = 0; i < FlightList[EnterFlightNumber].PassengersList.Length; i++) {
-                for (int j = 0; j < FlightList[EnterFlightNumber].PassengersList.Length - 1; j++) {
-                    if (FlightList[EnterFlightNumber].PassengersList[j] == null && FlightList[EnterFlightNumber].PassengersList[j + 1] != null) {
-                        temp = FlightList[EnterFlightNumber].PassengersList[j];
-                        FlightList[EnterFlightNumber].PassengersList[j] = FlightList[EnterFlightNumber].PassengersList[j + 1];
-                        FlightList[EnterFlightNumber].PassengersList[j + 1] = temp;
-                    }
-                }
-            }
 
             return true;
         }
@@ -256,23 +240,22 @@ namespace AirlineGeneric.Manager
         #region Edit passenger (Lastname,firstName,Birthday)
         public bool EditList(List<Flight> FlightList, int enterFlightNumber = -1) {
             Console.WriteLine("The operation is allowed only for flights in condition 'CheckIn' or 'Delayed'");
-            int EnterFlightNumber = enterFlightNumber;
+            int IndexFlightNumber = enterFlightNumber;
             if (enterFlightNumber == -1)
-                EnterFlightNumber = EnteredFlightNumber(FlightList);
+                IndexFlightNumber = EnteredFlightNumber(FlightList);
 
-            if (EnterFlightNumber == -1)
+            if (IndexFlightNumber == -1)
                 return false;
 
-            if (FlightList[EnterFlightNumber].GetFlightStatus() != "CheckIn" &&
-                FlightList[EnterFlightNumber].GetFlightStatus() != "Delayed") {
+            if (FlightList[IndexFlightNumber].GetFlightStatus() != "CheckIn" &&
+                FlightList[IndexFlightNumber].GetFlightStatus() != "Delayed") {
                 Console.WriteLine("Flight status does not allow passengers to change");
                 return false;
             }
             if (enterFlightNumber == -1)
-                this.PrintList(FlightList, EnterFlightNumber);
+                this.PrintList(FlightList, IndexFlightNumber);
 
-            int maxPassengerNumber = FlightList[EnterFlightNumber].PassengersList.Length - FlightList[EnterFlightNumber].FlightFreePlace;
-            if (maxPassengerNumber == 0) {
+            if (FlightList[IndexFlightNumber].PassengersList.Count == 0) {
                 Console.WriteLine("On this flight no tickets sold");
                 return false;
             }
@@ -286,10 +269,10 @@ namespace AirlineGeneric.Manager
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 bool isCorrectValue = int.TryParse(Console.ReadLine(), out tempFlightNumber);
                 if (isCorrectValue) {
-                    if (tempFlightNumber > 0 && tempFlightNumber <= maxPassengerNumber) {
+                    if (tempFlightNumber > 0 && tempFlightNumber <= (FlightList[IndexFlightNumber].PassengersList.Count+1)) {
                         tempFlightNumber--;
 
-                        Passenger item = FlightList[EnterFlightNumber].PassengersList[tempFlightNumber--];
+                        Passenger item = FlightList[IndexFlightNumber].PassengersList[tempFlightNumber--];
 
                         CleanerManager.CheckBorder();
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -350,8 +333,8 @@ namespace AirlineGeneric.Manager
         #endregion
 
         static int EnteredFlightNumber(List<Flight> FlightList) {
-            bool isEnter = true, isFind = false;
-            int EnterFlightNumber = 0, tempFlightNumber;
+            bool isEnter = true;
+            int IndexFlightNumber = 0, tempFlightNumber;
             do {
                 CleanerManager.CheckBorder();
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -360,26 +343,18 @@ namespace AirlineGeneric.Manager
                 bool isCorrectValue = int.TryParse(Console.ReadLine(), out tempFlightNumber);
                 if (isCorrectValue) {
                     if (tempFlightNumber == 1)
-                        return EnterFlightNumber = -1;
-                    int stepItem = 0;
-                    foreach (Flight item in FlightList) {
-                        if (item != null && item.FlightNumber != null) {
-                            if (item.FlightNumber == tempFlightNumber) {
-                                isEnter = false;
-                                isFind = true;
-                                EnterFlightNumber = stepItem;
-                            }
-                        }
-                        stepItem++;
-                    }
-                    if (!isFind)
+                        return IndexFlightNumber = -1;
+                    IndexFlightNumber = FlightList.FindIndex(x => x.FlightNumber == tempFlightNumber);
+                    if (IndexFlightNumber == -1)
                         Console.WriteLine("Number not find.Please entered correct number or '1' for Quit.");
+                    else
+                        isEnter = false;
                 } else
                     Console.WriteLine("The number entered not digit");
             } while (isEnter);
-            return EnterFlightNumber;
+            return IndexFlightNumber;
         }
 
-                
+
     }
 }

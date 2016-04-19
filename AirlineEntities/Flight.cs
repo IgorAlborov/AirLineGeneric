@@ -19,11 +19,7 @@ namespace AirlineEntities
 
     public class Flight : IComparable<Flight>
     {
-        //констанкта кол-ва пассажиров в самолете
-        public static readonly int FlightCapasity;
-        static Flight() {
-            FlightCapasity = 5;
-        }
+        const int MaxFlightCapacity = 100;
         enum DirectionForFlight
         {
             Arrival, Departure
@@ -56,25 +52,22 @@ namespace AirlineEntities
         StatusForFlight FlightStatus;
         public decimal FlightPriceBussiness;
         public decimal FlightPriceEconomy;
-        public Passenger[] PassengersList;
-        public byte FlightFreePlace {
+        public List<Passenger> PassengersList;
+        public int FlightFreePlace {
             get {
-                byte i = 0;
-                foreach (Passenger item in PassengersList) {
-                    if (item == null)
-                        i++;
-                }
-                return i;
+                if (PassengersList == null)
+                    return MaxFlightCapacity;
+                else
+                    return MaxFlightCapacity - PassengersList.Count;
             }
         }
 
         public Flight() {
-            PassengersList = new Passenger[FlightCapasity];
+           PassengersList = new List<Passenger>();
 
         }
 
         public override string ToString() {
-            int i = FlightCapasity - 5;
             return String.Format("|{0,-9}|{1,-16}|{2,-6}|{3,-15}|{4,11}/{5}|{6,-10}|{7,11}|", FlightDirection,
                    FlightDate.ToString("dd-MM-yyyy hh:mm"), FlightNumber, FlightCity, FlightTerminal, FlightGate,
                    FlightStatus, FlightFreePlace);
@@ -125,10 +118,10 @@ namespace AirlineEntities
                     int MaleIndex = rnd.Next(1, 1000) % 2;
                     switch (MaleIndex) {
                         case 0:      //Male
-                            PassengersList[i] = new Passenger("male", FlightPriceBussiness, FlightPriceEconomy);
+                            PassengersList.Add(new Passenger("male", FlightPriceBussiness, FlightPriceEconomy));
                             break;
                         case 1:     //Female
-                            PassengersList[i] = new Passenger("female", FlightPriceBussiness, FlightPriceEconomy);
+                            PassengersList.Add(new Passenger("female", FlightPriceBussiness, FlightPriceEconomy));
                             break;
                         default:
                             break;
