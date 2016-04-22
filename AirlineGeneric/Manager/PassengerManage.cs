@@ -186,6 +186,7 @@ namespace AirlineGeneric.Manager
                 FlightList[IndexFlightNumber].PassengersList[freeCell] = new Passenger(newPassenger);
             else
                 FlightList[IndexFlightNumber].PassengersList.Add(new Passenger(newPassenger));
+            LogManager.WriteToLog($"Add passenger {newPassenger.insertPassengerFirstname} {newPassenger.insertPassengerLastname} into flight {FlightList[IndexFlightNumber].FlightNumber}");
             return true;
         }
         #endregion
@@ -216,15 +217,16 @@ namespace AirlineGeneric.Manager
             bool isEnter = true;
             do {
                 CleanerManager.CheckBorder();
-                int tempFlightNumber;
+                int indexPassenger;
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write("Enter number passenger for delete: ");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                bool isCorrectValue = int.TryParse(Console.ReadLine(), out tempFlightNumber);
+                bool isCorrectValue = int.TryParse(Console.ReadLine(), out indexPassenger);
                 if (isCorrectValue) {
-                    if (tempFlightNumber > 0 && tempFlightNumber <= (FlightList[IndexFlightNumber].PassengersList.Count+1)) {
-                        tempFlightNumber--;
-                        FlightList[IndexFlightNumber].PassengersList.RemoveAt(tempFlightNumber);
+                    if (indexPassenger > 0 && indexPassenger <= (FlightList[IndexFlightNumber].PassengersList.Count+1)) {
+                        indexPassenger--;
+                        FlightList[IndexFlightNumber].PassengersList.RemoveAt(indexPassenger);
+                        LogManager.WriteToLog($"Remove passenger from flight {FlightList[IndexFlightNumber].FlightNumber}");
                         isEnter = false;
                         FlightList[IndexFlightNumber].PassengersList.TrimExcess();
                     } else

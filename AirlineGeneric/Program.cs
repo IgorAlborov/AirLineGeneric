@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
 using System.Threading;
+using AirlineGeneric.Manager;
 
 namespace AirlineGeneric
 {
@@ -15,6 +16,9 @@ namespace AirlineGeneric
             CultureInfo ci = new CultureInfo("en");
             Thread.CurrentThread.CurrentCulture = ci;
             Thread.CurrentThread.CurrentUICulture = ci;
+
+            LogManager.WriteToLog("Start application 'AirlineGeneric'");
+            
 
             //start value flight
             const byte FlightsCount = 5;
@@ -48,6 +52,7 @@ namespace AirlineGeneric
                         break;
                     case 'q':
                     case 'Q':
+                        LogManager.WriteToLog("Quit from application 'AirlineGeneric'");
                         isEnter = false;
                         break;
                     default:

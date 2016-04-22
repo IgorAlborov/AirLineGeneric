@@ -16,7 +16,6 @@ namespace AirlineGeneric
         List<Flight> FlightList;
         IManager FlightsManager = new FlightManage();
         IManager PassengerManager = new PassengerManage();
-        //IArrangeList ListManager = new FlightManage();
 
         const int ClearLineConsole = 37;
 
@@ -30,6 +29,7 @@ namespace AirlineGeneric
                 Thread.Sleep(100);
             }
             FlightList.Sort();
+            LogManager.WriteToLog("Added random values");
 #endif
             #endregion
         }

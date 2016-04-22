@@ -127,6 +127,7 @@ namespace AirlineGeneric.Manager
             }
 
             FlightList.Add(new Flight(newFlight));
+            LogManager.WriteToLog($"Add new flight number {newFlight.insertFlightNumber}");
 
             return true;
 
@@ -153,6 +154,7 @@ namespace AirlineGeneric.Manager
                             case 'y':
                             case 'Y':
                                 FlightList.RemoveAt(findFlight);
+                                LogManager.WriteToLog($"Delete flight number {insertFlightNumber}");
                                 isDelete = true;
                                 isCorrect = false;
                                 break;
