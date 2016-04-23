@@ -19,7 +19,8 @@ namespace AirlineGeneric
 
         const int ClearLineConsole = 37;
 
-        public Airline(byte flightsCount) {
+        public Airline(byte flightsCount)
+        {
             FlightList = new List<Flight>(flightsCount);
 
             #region insert sample value
@@ -34,16 +35,35 @@ namespace AirlineGeneric
             #endregion
         }
 
-        public void ManagerMenu(string FlightOrPassenger) {
+        Action<List<Flight>> printList, printList2;
+        Func<List<Flight>, bool> addToList, deleteFromList, editList;
+
+
+        public void ManagerMenu(string FlightOrPassenger)
+        {
+            string entiti;
+            if (FlightOrPassenger == "flight") {
+                entiti = "   FLIGHT";
+                printList = x => FlightsManager.PrintList(x);
+                printList2 = printList;
+                addToList = x => FlightsManager.AddToList(x);
+                deleteFromList = x => FlightsManager.DeleteFromList(x);
+                editList = x => FlightsManager.EditList(x);
+            } else {
+                entiti = "PASSENGER";
+                printList = x => FlightsManager.PrintList(x);
+                printList2 = printList;
+                printList += x => PassengerManager.PrintList(x);
+                addToList = x => PassengerManager.AddToList(x);
+                deleteFromList = x => PassengerManager.DeleteFromList(x);
+                editList = x => PassengerManager.EditList(x);
+            }
             bool isEnter = true;
             do {
                 Console.CursorLeft = 30;
                 Console.CursorTop = 0;
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                if (FlightOrPassenger == "flight")
-                    Console.WriteLine("CONTROL MENU FLIGHTS       |");
-                if (FlightOrPassenger == "passenger")
-                    Console.WriteLine("CONTROL MENU PASSENGERS    |");
+                Console.WriteLine(@"CONTROL MENU {0}S    |", entiti);
                 Console.CursorLeft = 30;
                 Console.WriteLine("---------------------------|");
                 Console.CursorLeft = 30;
@@ -61,104 +81,53 @@ namespace AirlineGeneric
                 Console.CursorLeft = 30;
                 Console.WriteLine("---------------------------|");
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                if (FlightOrPassenger == "flight") {
-                    switch (Console.ReadKey().KeyChar) {
-                        case '1':
-                            FlightsManager.PrintList(FlightList);
-                            Console.WriteLine("Press any key to back menu");
-                            Console.ReadKey();
-                            CleanerManager.ClearConsole(ClearLineConsole);
-                            break;
-                        case '2':
-                            if (FlightsManager.AddToList(FlightList)) {
-                                Console.WriteLine("Flight successfully added");
-                                FlightsManager.PrintList(FlightList);
-                            } else
-                                Console.WriteLine("Flight not added");
-                            Console.WriteLine("Press any key to back menu");
-                            Console.ReadKey();
-                            CleanerManager.ClearConsole(ClearLineConsole);
-                            break;
-                        case '3':
-                            FlightsManager.PrintList(FlightList);
-                            if (FlightsManager.DeleteFromList(FlightList))
-                                Console.WriteLine("Flight successfully deleted");
-                            else
-                                Console.WriteLine("Flight NOT deleted");
-                            Console.WriteLine("Press any key to back menu");
-                            Console.ReadKey();
-                            CleanerManager.ClearConsole(ClearLineConsole);
-                            break;
-                        case '4':
-                            FlightsManager.PrintList(FlightList);
-                            if (FlightsManager.EditList(FlightList))
-                                Console.WriteLine("Flight successfully modified");
-                            else
-                                Console.WriteLine("Flight NOT modified");
-                            Console.WriteLine("Press any key to back menu");
-                            Console.ReadKey();
-                            CleanerManager.ClearConsole(ClearLineConsole);
-                            break;
-                        case '5':
-                            AirlineSearch.SearchMenu(FlightList);
-                            CleanerManager.ClearSearchMenu();
-                            CleanerManager.ClearConsole(ClearLineConsole);
-                            break;
-                        default:
-                            Console.Clear();
-                            isEnter = false;
-                            break;
-                    }
-                }
-                if (FlightOrPassenger == "passenger") {
-                    switch (Console.ReadKey().KeyChar) {
-                        case '1':
-                            FlightsManager.PrintList(FlightList);
-                            PassengerManager.PrintList(FlightList);
-                            Console.WriteLine("Press any key to back menu");
-                            Console.ReadKey();
-                            CleanerManager.ClearConsole(ClearLineConsole);
-                            break;
-                        case '2':
-                            FlightsManager.PrintList(FlightList);
-                            if (PassengerManager.AddToList(FlightList)) {
-                                Console.WriteLine("Passenger successfully added");
-                            } else
-                                Console.WriteLine("Passenger not added");
-                            Console.WriteLine("Press any key to back menu");
-                            Console.ReadKey();
-                            CleanerManager.ClearConsole(ClearLineConsole);
-                            break;
-                        case '3':
-                            FlightsManager.PrintList(FlightList);
-                            if (PassengerManager.DeleteFromList(FlightList))
-                                Console.WriteLine("Passenger successfully deleted");
-                            else
-                                Console.WriteLine("Passenger NOT deleted");
-                            Console.WriteLine("Press any key to back menu");
-                            Console.ReadKey();
-                            CleanerManager.ClearConsole(ClearLineConsole);
-                            break;
-                        case '4':
-                            FlightsManager.PrintList(FlightList);
-                            if (PassengerManager.EditList(FlightList))
-                                Console.WriteLine("Passenger successfully modified");
-                            else
-                                Console.WriteLine("Passenger NOT modified");
-                            Console.WriteLine("Press any key to back menu");
-                            Console.ReadKey();
-                            CleanerManager.ClearConsole(ClearLineConsole);
-                            break;
-                        case '5':
-                            AirlineSearch.SearchMenu(FlightList);
-                            CleanerManager.ClearSearchMenu();
-                            CleanerManager.ClearConsole(35);
-                            break;
-                        default:
-                            Console.Clear();
-                            isEnter = false;
-                            break;
-                    }
+                switch (Console.ReadKey().KeyChar) {
+                    case '1':
+                        printList(FlightList);
+                        Console.WriteLine("Press any key to back menu");
+                        Console.ReadKey();
+                        CleanerManager.ClearConsole(ClearLineConsole);
+                        break;
+                    case '2':
+                        printList2(FlightList);
+                        if (addToList(FlightList)) {
+                            Console.WriteLine($"{entiti} successfully added");
+                            printList2(FlightList);
+                        } else
+                            Console.WriteLine($"{entiti} not added");
+                        Console.WriteLine("Press any key to back menu");
+                        Console.ReadKey();
+                        CleanerManager.ClearConsole(ClearLineConsole);
+                        break;
+                    case '3':
+                        printList2(FlightList);
+                        if (deleteFromList(FlightList))
+                            Console.WriteLine($"{entiti} successfully deleted");
+                        else
+                            Console.WriteLine($"{entiti} NOT deleted");
+                        Console.WriteLine("Press any key to back menu");
+                        Console.ReadKey();
+                        CleanerManager.ClearConsole(ClearLineConsole);
+                        break;
+                    case '4':
+                        printList2(FlightList);
+                        if (editList(FlightList))
+                            Console.WriteLine($"{entiti} successfully modified");
+                        else
+                            Console.WriteLine($"{entiti} NOT modified");
+                        Console.WriteLine("Press any key to back menu");
+                        Console.ReadKey();
+                        CleanerManager.ClearConsole(ClearLineConsole);
+                        break;
+                    case '5':
+                        AirlineSearch.SearchMenu(FlightList);
+                        CleanerManager.ClearSearchMenu();
+                        CleanerManager.ClearConsole(ClearLineConsole);
+                        break;
+                    default:
+                        Console.Clear();
+                        isEnter = false;
+                        break;
                 }
             } while (isEnter);
         }
