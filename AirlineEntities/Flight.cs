@@ -64,7 +64,6 @@ namespace AirlineEntities
 
         public Flight() {
            PassengersList = new List<Passenger>();
-
         }
 
         public override string ToString() {
