@@ -17,7 +17,7 @@ namespace AirlineGeneric
         IManager FlightsManager = new FlightManage();
         IManager PassengerManager = new PassengerManage();
 
-        const int ClearLineConsole = 37;
+        const int ClearLineConsole = 42;
 
         public Airline(byte flightsCount)
         {
@@ -92,7 +92,6 @@ namespace AirlineGeneric
                         printList(FlightList);
                         if (addToList(FlightList)) {
                             Console.WriteLine($"{entiti} successfully added");
-                            printList(FlightList);
                         } else
                             Console.WriteLine($"{entiti} not added");
                         Console.WriteLine("Press any key to back menu");

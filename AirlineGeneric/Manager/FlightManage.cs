@@ -246,7 +246,7 @@ namespace AirlineGeneric.Manager
                                     isCorrect = false;
                                     break;
                                 default:
-                                    isEdit = true;
+                                    isEdit = false;
                                     Console.WriteLine("Editing canceled");
                                     isCorrect = false;
                                     break;
