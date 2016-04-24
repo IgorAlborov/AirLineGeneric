@@ -35,7 +35,7 @@ namespace AirlineGeneric
             #endregion
         }
 
-        Action<List<Flight>> printList, printList2;
+        Action<List<Flight>> printList, printListDouble;
         Func<List<Flight>, bool> addToList, deleteFromList, editList;
 
 
@@ -45,15 +45,15 @@ namespace AirlineGeneric
             if (FlightOrPassenger == "flight") {
                 entiti = "   FLIGHT";
                 printList = x => FlightsManager.PrintList(x);
-                printList2 = printList;
+                printListDouble = printList;
                 addToList = x => FlightsManager.AddToList(x);
                 deleteFromList = x => FlightsManager.DeleteFromList(x);
                 editList = x => FlightsManager.EditList(x);
             } else {
                 entiti = "PASSENGER";
                 printList = x => FlightsManager.PrintList(x);
-                printList2 = printList;
-                printList += x => PassengerManager.PrintList(x);
+                printListDouble = printList;
+                printListDouble += x => PassengerManager.PrintList(x);
                 addToList = x => PassengerManager.AddToList(x);
                 deleteFromList = x => PassengerManager.DeleteFromList(x);
                 editList = x => PassengerManager.EditList(x);
@@ -83,16 +83,16 @@ namespace AirlineGeneric
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 switch (Console.ReadKey().KeyChar) {
                     case '1':
-                        printList(FlightList);
+                        printListDouble(FlightList);
                         Console.WriteLine("Press any key to back menu");
                         Console.ReadKey();
                         CleanerManager.ClearConsole(ClearLineConsole);
                         break;
                     case '2':
-                        printList2(FlightList);
+                        printList(FlightList);
                         if (addToList(FlightList)) {
                             Console.WriteLine($"{entiti} successfully added");
-                            printList2(FlightList);
+                            printList(FlightList);
                         } else
                             Console.WriteLine($"{entiti} not added");
                         Console.WriteLine("Press any key to back menu");
@@ -100,7 +100,7 @@ namespace AirlineGeneric
                         CleanerManager.ClearConsole(ClearLineConsole);
                         break;
                     case '3':
-                        printList2(FlightList);
+                        printList(FlightList);
                         if (deleteFromList(FlightList))
                             Console.WriteLine($"{entiti} successfully deleted");
                         else
@@ -110,7 +110,7 @@ namespace AirlineGeneric
                         CleanerManager.ClearConsole(ClearLineConsole);
                         break;
                     case '4':
-                        printList2(FlightList);
+                        printList(FlightList);
                         if (editList(FlightList))
                             Console.WriteLine($"{entiti} successfully modified");
                         else
